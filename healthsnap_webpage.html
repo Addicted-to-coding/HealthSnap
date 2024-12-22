@@ -336,12 +336,13 @@
                 </h1>
             </div>
 
+
             <div class="waitlist-form">
-                <form id="email-form" class="form-container" action="mailto:vsarwal@g.ucla.edu" method="GET">
+                <form id="email-form" class="form-container" target="hidden_iframe">
                     <input
                         type="email"
                         id="email-input"
-                        name="subject"
+                        name="entry.605265976"
                         placeholder="Enter your email for early access"
                         required
                     >
@@ -472,19 +473,42 @@
         }
 
         // Form handling
+        // Form handling
         const form = document.getElementById('email-form');
         const emailInput = document.getElementById('email-input');
+
+        // Create a hidden iframe for the response
+        const iframe = document.createElement('iframe');
+        iframe.name = 'hidden_iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+
+        form.action = 'https://docs.google.com/forms/d/e/1FAIpQLSfOpC6BwKQgHl3_zoJmqQynH8uCYWfyIn2J_usEqhMpIhVPag/formResponse';
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             if (emailInput.value) {
-                alert('Thank you for joining our waitlist!');
-                emailInput.value = '';
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: formData
+                })
+                .then(() => {
+                    alert('Thank you for joining our waitlist!');
+                    emailInput.value = '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Something went wrong. Please try again.');
+                });
             }
         });
 
         // Start the typing animation
         typeText();
+
     </script>
+
 </body>
 </html>
